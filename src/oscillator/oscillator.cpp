@@ -1,4 +1,4 @@
-#include "./include/oscillator.hpp"
+#include "oscillator.hpp"
 
 Oscillator::Oscillator(float freq, float amp, OSC type)
     : frequency_{freq}, amplitude_{amp}, type_{type} {

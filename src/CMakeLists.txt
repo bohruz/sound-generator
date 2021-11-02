@@ -1,11 +1,23 @@
-add_subdirectory(include)
+project(osc CXX)
 
-add_executable(${PROJECT_NAME})
+add_subdirectory(wavefile)
+add_subdirectory(oscillator)
 
 
-target_sources(${PROJECT_NAME}
-                PRIVATE 
-                main.cpp
-                oscillator.cpp 
-                wavefile.cpp
+add_executable(
+    osc
+    )
+
+
+target_sources(
+    osc
+    PRIVATE 
+        main.cpp
 )  
+
+target_link_libraries(
+    osc
+    PRIVATE 
+        wavefile
+        oscillator
+)

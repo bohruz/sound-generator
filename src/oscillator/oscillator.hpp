@@ -5,7 +5,7 @@
 #endif
 #include <cmath>
 
-#include "./wavefile.hpp"
+#include "./../wavefile/wavefile.hpp"
 
 enum class OSC { SINE, SQUARE, TRIANGLE, SAW_ANALOG, SAW_DIGITAL, NOISE };
 

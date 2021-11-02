@@ -1,4 +1,4 @@
-#include "./include/wavefile.hpp"
+#include "wavefile.hpp"
 
 WaveFile::WaveFile(std::string name) : name_{name} { set_header(); }
 WaveFile::WaveFile(std::string name, float const sample_rate,
