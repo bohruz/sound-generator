@@ -13,11 +13,11 @@ class Oscillator {
  public:
   Oscillator(float freq, float amp, OSC type);
 
-  void generate_sound(int const duration);
+  void generate_sound(std::string name, int const duration);
 
  private:
   // General purpose oscillator
-  float getWave(float angle, OSC nType);
+  float get_sound_wave_value(float angle, OSC nType);
   float const sample_rate_{44100.0f};
   int const bit_depth_{16};
   float frequency_{0.0f}, amplitude_{0.0f}, w_{0.0f};

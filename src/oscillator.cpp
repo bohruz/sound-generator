@@ -5,12 +5,12 @@ Oscillator::Oscillator(float freq, float amp, OSC type)
   w_ = (2.0f * M_PI * frequency_) / sample_rate_;
 }
 
-void Oscillator::generate_sound(int const duration) {
-  auto audio_file = WaveFile{"sound.wav"};
+void Oscillator::generate_sound(std::string name, int const duration) {
+  auto audio_file = WaveFile{name};
 
   auto const max_amplitude = pow(2, bit_depth_ - 1) - 1;
   for (auto i{0}; i < sample_rate_ * duration; ++i) {
-    auto sample = amplitude_ * getWave(w_ * i, type_);
+    auto sample = amplitude_ * get_sound_wave_value(w_ * i, type_);
 
     auto int_sample = static_cast<int>(sample * max_amplitude);
 
@@ -18,7 +18,7 @@ void Oscillator::generate_sound(int const duration) {
   }
 }
 // General purpose oscillator
-float Oscillator::getWave(float angle, OSC nType) {
+float Oscillator::get_sound_wave_value(float angle, OSC nType) {
   switch (nType) {
     case OSC::SINE:  // Sine wave bewteen -1 and +1
       return sin(angle);
