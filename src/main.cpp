@@ -7,9 +7,7 @@
 
 // General purpose oscillator
 enum class OSC { SINE, SQUARE, TRIANGLE, SAW_ANALOG, SAW_DIGITAL, NOISE };
-float w(float dHertz);
-float oscilator(float dHertz, float dTime, OSC nType, float dLFOHertz,
-                float dLFOAmplitude);
+float getWave(float angle, OSC nType);
 
 class WaveFile {
  public:
@@ -79,12 +77,12 @@ class SineOscillator {
   }
 
   void generate_sound(int const duration) {
-    auto audio_file = WaveFile{"SineWave.wav"};
+    auto audio_file = WaveFile{"sound.wav"};
 
     auto const max_amplitude = pow(2, bit_depth_ - 1) - 1;
     for (auto i{0}; i < sample_rate_ * duration; ++i) {
       // auto sample = amplitude_ * sin(w_ * i);
-      auto sample = amplitude_ * sin(w_ * i) > 0 ? 1.0 : -1.0;
+      auto sample = amplitude_ * getWave(w_ * i, OSC::SAW_ANALOG);
       // auto sample =
       //    amplitude_ * oscilator(frequency_, i, OSC::SINE, 0.0f, 0.0f);
       auto int_sample = static_cast<int>(sample * max_amplitude);
@@ -113,33 +111,29 @@ int main(int argc, char** argv) {
 }
 
 // General purpose oscillator
-float w(float dHertz) { return 2.0 * M_PI * dHertz; };
-float oscilator(float dHertz, float dTime, OSC nType, float dLFOHertz,
-                float dLFOAmplitude) {
-  float dFreq = w(dHertz) * dTime + dLFOAmplitude * sin(w(dLFOHertz) * dTime);
-
+float getWave(float angle, OSC nType) {
   switch (nType) {
     case OSC::SINE:  // Sine wave bewteen -1 and +1
-      return sin(dFreq);
+      return sin(angle);
 
     case OSC::SQUARE:  // Square wave between -1 and +1
-      return sin(dFreq) > 0 ? 1.0 : -1.0;
+      return sin(angle) > 0 ? 1.0 : -1.0;
 
     case OSC::TRIANGLE:  // Triangle wave between -1 and +1
-      return asin(sin(dFreq)) * (2.0 / M_PI);
+      return asin(sin(angle)) * (2.0 / M_PI);
 
     case OSC::SAW_ANALOG:  // Saw wave (analogue / warm / slow)
     {
       float dOutput = 0.0;
 
-      for (float n = 1.0; n < 100.0; n++) dOutput += (sin(n * dFreq)) / n;
+      for (float n = 1.0; n < 100.0; n++) dOutput += (sin(n * angle)) / n;
 
       return dOutput * (2.0 / M_PI);
     }
 
-    case OSC::SAW_DIGITAL:  // Saw Wave (optimised / harsh / fast)
-      return (2.0 / M_PI) *
-             (dHertz * M_PI * fmod(dTime, 1.0 / dHertz) - (M_PI / 2.0));
+      // case OSC::SAW_DIGITAL:  // Saw Wave (optimised / harsh / fast)
+      //   return (2.0 / M_PI) *
+      //          (dHertz * M_PI * fmod(dTime, 1.0 / dHertz) - (M_PI / 2.0));
 
     case OSC::NOISE:  // Pseudorandom noise
       return 2.0 * ((float)rand() / (float)RAND_MAX) - 1.0;
